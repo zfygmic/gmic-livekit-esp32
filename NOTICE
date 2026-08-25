@@ -1,0 +1,48 @@
+GMIC HA-TOYMD — LiveKit reference integration
+Copyright 2026 GMIC AI Inc.
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+------------------------------------------------------------------------
+Derived work
+------------------------------------------------------------------------
+
+This project began as the `custom_hardware` example from the LiveKit ESP32
+client SDK:
+
+    https://github.com/livekit/client-sdk-esp32
+    Copyright LiveKit, Inc. — Apache License 2.0
+
+The upstream example targets a Waveshare development board with a
+touchscreen, two audio chips, and a separate power-management IC. It does
+not run on the HA-TOYMD module as-is. The following files were modified or
+rewritten by GMIC AI Inc. to bring LiveKit up on this hardware:
+
+  main/board.c    Rewritten. The upstream implementation drives a different
+                  board: two codecs on different pins, plus a PMIC that does
+                  not exist here. This module has a single ES8311 handling
+                  both capture and playback.
+
+  main/media.c    Capture path changed. Upstream routes the microphone
+                  through the on-device AEC front end, which expects a
+                  4-channel TDM stream with a hardware reference channel.
+                  This module has one microphone on a 2-channel bus; feeding
+                  the AEC front end from it overflows its ring buffer and
+                  tears the connection down after roughly 27 seconds.
+                  Capture is now taken straight from the codec, and echo
+                  cancellation is left to the application side.
+
+  main/main.c     Startup banner added, so a board flashed without
+                  credentials explains what is missing instead of failing
+                  silently.
+
+  main/board.h    Pin map for this module. The values were recovered by
+  (pin values)    reading the GPIO routing registers out of the running
+                  factory firmware over the chip's built-in USB-JTAG port,
+                  then verified on hardware.
+
+  sdkconfig.defaults, partitions.csv
+                  Adjusted for 4 MB flash and 2 MB quad PSRAM.
+
+Everything else is upstream, unchanged, and pulled by the ESP-IDF component
+manager at build time. See dependencies.lock for the exact versions.
