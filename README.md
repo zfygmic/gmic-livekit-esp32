@@ -168,10 +168,8 @@ then no media ever flows, pin the server to your IPv4 address
 
 ## Getting the hardware
 
-<!-- TODO(Fanyao): one or two sentences. How does a reader actually obtain a
-     module? No prices, no MOQ. Everything below this line is placeholder. -->
-
-_Contact us and we will point you at the right part._
+The HA-TOYMD is manufactured by GMIC AI Inc. If you want to evaluate one, email
+<fanyao@gmic.ai> and tell us what you are building.
 
 ---
 
